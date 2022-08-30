@@ -1,0 +1,102 @@
+<section style="margin-top: 60px">
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <img class="img-fluid" style="width:50px; filter: grayscale(100%);" src="../../../../assets/images/hospital.png" alt="">
+            </div>
+            <div class="col-4">
+                <h4>مستشفي إيتاي البارود العام</h4>
+            </div>
+        </div>
+    </div>
+
+    <div id="pharmacy-title" class="text-center mb-3 pt-3">
+        <h4>السيد الدكتور / وكيل وزارة الصحة و السكان</h4>
+        <h4>(وحدة علاج المواطنين علي نفقة الدولة)</h4>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-4 text-end">
+                <span class="lead"> ................... : لسنة</span>
+            </div>
+            <div class="col-8 text-end">
+                <span class="lead"> ............................................... : صدر القرار الوزاري رقم</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 text-end">
+                <span class="lead"> الاسم : {{ patientName }} </span>
+            </div>
+            <div class="col-4 text-end">
+                <span class="lead"> ................... : رقم الملف</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6 text-end">
+                <span class="lead"> {{totalPrice}} : بتكاليف علاج بمبلغ </span>
+            </div>
+            <div class="col-6 text-end">
+                <span class="lead"> ................... : قسم</span>
+            </div>
+        </div>
+        <div class="text-end mt-2 me-2">
+            <h5>: و تم شراء العلاج الاتي</h5>
+        </div>
+    </div>
+
+    <hr>
+    <div class="container" *ngIf="orders.length > 0">
+        <div class=" table-responsive-sm mx-2 mt-0 pt-0">
+            <table id="table" class="table  table-hover text-end  mx-auto">
+                <thead>
+                    <tr>
+                        <th scope="col">رقم الشيك</th>
+                        <th scope="col">المبلغ</th>
+                        <th scope="col">شهر</th>
+                        <th scope="col">العلاج</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let productBill of orders; let i = index">
+                        <td> </td>
+                        <td>{{productBill.totalSellPrice}}</td>
+                        <td>{{productBill.createdDate | date: 'MM'}}</td>
+                        <td>{{productBill.treatmentName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="text-end mt-2 me-2">
+            <h5>
+                : تحريرا في
+            </h5>
+        </div>
+        <div class="row pt-2">
+            <div class="col-3 text-end">
+                <span class="lead"> ................... : الطبيب المعالج</span>
+            </div>
+            <div class="col-3 text-end">
+                <span class="lead"> ................... : الصيدلي</span>
+            </div>
+            <div class="col-3 text-end">
+                <span class="lead"> ................... : مسؤل الوحدة</span>
+            </div>
+            <div class="col-3 text-end">
+                <span class="lead"> ................... : المختص</span>
+            </div>
+        </div>
+        <div class="row pt-2">
+            <div class="col-3 text-end">
+                <span class="lead">................... : يعتمد مدير المستشفي</span>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3"></div>
+            <div class="col-3"></div>
+        </div>
+
+    </div>
+</section>

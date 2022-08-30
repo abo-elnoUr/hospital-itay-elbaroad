@@ -1,0 +1,41 @@
+<section style="margin-top: 60px">
+    <hr>
+    <div class="mx-auto w-25 text-end remove_item">
+        <div class="date-search">
+            <input type="date" class="form-control mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [(ngModel)]="dateFrom" />
+            <button (click)="findAllTreatmentRegisterationByDateFromTo()" class="btn btn-outline-primary text-end"><i
+                    class="fa-solid fa-calendar-days me-2"></i>بحث بالتاريخ</button>
+        </div>
+    </div>
+    <div id="print_table_1" class="row-parent ">
+        <div *ngIf="registerations.length == 0" class="mx-auto text-center remove_item rounded py-3 w-25" style="border: 1px solid #999;">
+            <h4>لا يوجد رصيد حاليا</h4>
+        </div>
+
+        <div *ngIf="registerations.length > 0" class="table-responsive">
+            <div class="hospital-desc text-end">
+                <h3>المستشفي العام بإيتاي البارود</h3>
+                <h3>صيدلية العلاج الأقتصادي/نفقة الدولة</h3>
+            </div>
+            <table id="print_table" class="table text-end table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">تاريخ الصرف</th>
+                        <th scope="col"> الكمية / رقم القرار</th>
+                        <th scope="col">اسم الدواء</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of registerations; let i=index">
+                        <td>{{item.createdDate | date: 'yyyy-MM-dd'}}</td>
+                        <td>{{item.decisionNumber}} / {{item.amount}}</td>
+                        <td>{{item.treatmentName}}</td>
+                        <th scope="row">{{1+i}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>

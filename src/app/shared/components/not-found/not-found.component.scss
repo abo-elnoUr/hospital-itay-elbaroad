@@ -1,0 +1,85 @@
+#oopss {
+    background: linear-gradient(-45deg, #fff300, #efe400);
+    position: fixed;
+    left: 0px;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 1.5em;
+    z-index: 9999;
+}
+
+#oopss #error-text {
+    font-size: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #000;
+    direction: rtl;
+}
+
+#oopss #error-text img {
+    margin: 85px auto 20px;
+    height: 342px;
+}
+
+#oopss #error-text span {
+    position: relative;
+    font-size: 3.3em;
+    font-weight: 900;
+    margin-bottom: 50px;
+    font-family: "Poppins", sans-serif;
+}
+
+#oopss #error-text p.p-a {
+    font-size: 19px;
+    margin: 30px 0 15px 0;
+    font-family: "Tajawal", sans-serif;
+    transition: all 0.3s ease;
+}
+
+#oopss #error-text .back {
+    background: #fff;
+    color: #000;
+    font-size: 30px;
+    text-decoration: none;
+    margin: 2em auto;
+    padding: 0.7em 2em;
+    border-radius: 12px;
+    box-shadow: 0 20px 70px 4px rgba(0, 0, 0, 0.4), inset 0px 50px 5px 0px #fff300;
+    font-weight: 900;
+    transition: all 300ms ease-in-out;
+    font-family: "Tajawal", sans-serif;
+}
+
+#oopss #error-text .back:hover {
+    -webkit-transform: translateY(-13px);
+    transform: translateY(-13px);
+    box-shadow: 0 35px 90px 4px rgba(255, 255, 255, 0.2), inset 0px 0 0px 3px #fff;
+}
+
+@media screen and (max-width: 992px) {
+    #oopss #error-text {
+        font-size: 20px;
+    }
+    #oopss #error-text p.p-a {
+        font-size: 16px;
+        margin: 20px 0 10px 0;
+    }
+    #oopss #error-text .back {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 615px) {
+    #oopss #error-text {
+        font-size: 16px;
+    }
+    #oopss #error-text p.p-a {
+        font-size: 13px;
+        margin: 10px 0 5px 0;
+    }
+    #oopss #error-text .back {
+        font-size: 15px;
+    }
+}

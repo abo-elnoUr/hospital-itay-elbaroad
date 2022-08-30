@@ -1,0 +1,120 @@
+<section style="margin-top: 60px">
+    <div id="report-title" class="text-center mb-3 pt-3">
+        <h3><i class="fa-solid fa-clipboard me-2"></i>التقارير</h3>
+    </div>
+    <div id="report-form" class="row-parent">
+        <form class="w-25 form-mine">
+            <div class="input-group mb-3 pb-3">
+                <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [formControl]="dateFrom" />
+                <span class="input-group-text" id="inputGroup-sizing-default">من</span>
+            </div>
+            <div class="input-group mb-3">
+                <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [formControl]="dateTo" />
+                <span class="input-group-text" id="inputGroup-sizing-default">الي</span>
+            </div>
+            <div class="text-end mx-auto">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="getReports()">
+                    <i class="fa-solid fa-clipboard me-2"></i>اعرض التقارير
+                </button>
+
+                <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" (click)="getPatientNameReports()">
+                    <i class="fa-solid fa-file-signature me-2"></i>اعرض اسماء المرضي
+                </button>
+
+                <button class="btn btn-outline-primary ms-2" routerLink="/treatment-registeration">
+                    <i class="fa-solid fa-hospital-user me-2"></i>التسجيل اليومي
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Full screen modal -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div id="modal-content" class="modal-content">
+            <div id="report-body-title" class="modal-header">
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title ms-auto" id="staticBackdropLabel">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </h5>
+            </div>
+            <div class="modal-body text-end">
+                <div class="hospital-desc text-end">
+                    <h5>المستشفي العام بإيتاي البارود</h5>
+                    <h5>صيدلية العلاج الأقتصادي/نفقة الدولة</h5>
+                </div>
+                <div class="table-responsive-xl mt-5">
+                    <table class="table table-hover text-end mx-auto">
+                        <thead>
+                            <tr>
+                                <th scope="col">اسم المريض</th>
+                                <th scope="col">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let order of orders; let i = index">
+                                <td>{{ order }}</td>
+                                <th scope="row">{{ 1 + i }}</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full screen modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div id="modal-content" class="modal-content">
+            <div id="report-body-title" class="modal-header">
+                <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title ms-auto" id="staticBackdropLabel">
+                    <i class="fa-solid fa-clipboard"></i>
+                </h5>
+            </div>
+            <div class="modal-body text-end">
+                <div class="hospital-desc text-end">
+                    <h5>المستشفي العام بإيتاي البارود</h5>
+                    <h5>صيدلية العلاج الأقتصادي/نفقة الدولة</h5>
+                </div>
+                <div class="table-responsive-xl mt-5">
+                    <table class="table text-end mx-auto">
+                        <thead>
+                            <tr>
+                                <th scope="col">الاجمالي</th>
+                                <th scope="col"> التاريخ ---------- الكمية</th>
+                                <th scope="col">اسم الدواء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let treatme of map | keyvalue; let i = index">
+                                <td>
+                                    <ul class="list-group list-group-flush" *ngFor="let t of maps | keyvalue">
+                                        <li *ngIf="treatme.key == t.key" class="list-group-item bg-transparent">
+                                            {{ t.value }}
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul class="list-group list-group-flush" *ngFor="let item of treatme.value | keyvalue">
+                                        <li class="list-group-item bg-transparent">
+                                            <span class="me-2"> {{ item.value }}</span>
+                                            <span>--</span>
+                                            <span class="ms-2">{{ item.key | date: "yyyy-MM-dd" }}</span>
+
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>{{ treatme.key }}</td>
+                            </tr>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+* {
+    box-sizing: border-box;
+    font-family: "Noto Sans Arabic", sans-serif;
+}
+
+.row-parent {
+    margin: 20px 20px;
+    padding-top: 30px;
+}
+
+.page_break {
+    break-after: always;
+}
+
+@media print {
+    h5,
+    h4,
+    #print_table {
+        font-size: 12px !important;
+    }
+    #print_button,
+    .remove_item {
+        display: none;
+    }
+    .hospital-desc h3 {
+        font-size: 12px;
+    }
+}

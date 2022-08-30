@@ -1,0 +1,112 @@
+* {
+    box-sizing: border-box;
+    font-family: "Noto Sans Arabic", sans-serif;
+}
+
+.row-parent {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    align-items: flex-start;
+}
+
+.col-child {
+    display: grid;
+    justify-items: normal;
+    grid-template-columns: 1fr;
+    gap: 0;
+    align-items: center;
+}
+
+.add_button {
+    display: grid;
+    height: 20vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.divider-parent {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.divider {
+    width: 90vw;
+    height: 3px;
+    background: #777;
+    border-radius: 20px;
+}
+
+.col-parent__treatment {
+    display: grid;
+    justify-items: inherit;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 10px 10px;
+    // align-items: flex-start;
+}
+
+.page_break {
+    break-after: always;
+}
+
+// media query
+@media screen and (max-width: 992px) {
+    .row-parent {
+        grid-template-columns: repeat(1, 1fr);
+        justify-items: center;
+        gap: 0;
+    }
+    .col-parent__treatment {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+@media screen and (max-width: 615px) {
+    .row-parent {
+        grid-template-columns: repeat(1, 1fr);
+        justify-items: center;
+        gap: 0;
+    }
+    .col-parent__treatment {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+@media print {
+    * {
+        font-size: 12px;
+    }
+    nav,
+    #pharmacy-title,
+    #pharmacy-search,
+    #pharmacy-addTreatment,
+    #pharmacy-treatment,
+    #pharmacy-button {
+        display: none;
+    }
+    .row-parent {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+    }
+    #pharmacy-patient-treatment {
+        margin-top: 0;
+    }
+    #diagnosis {
+        order: 1;
+        text-align: center;
+        width: 95%;
+        margin: 0 auto;
+    }
+    .col-parent__treatment {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .hospital-desc h3 {
+        font-size: 12px;
+    }
+}

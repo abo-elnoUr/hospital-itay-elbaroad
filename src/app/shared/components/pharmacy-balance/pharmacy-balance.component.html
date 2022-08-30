@@ -1,0 +1,36 @@
+<section style="margin-top: 60px">
+    <div class="row-parent">
+        <div class="text-center mb-3 mt-0">
+            <h3><i class="fa-solid fa-laptop-medical me-2"></i>رصيد الصيدلية</h3>
+        </div>
+        <div *ngIf="pharmacies.length == 0" class="mx-auto text-center rounded py-3 w-25" style="border: 1px solid #999;">
+            <h4>لا يوجد رصيد حاليا</h4>
+            <p class="muted pb-0 mb-0">الرجاء إضافة علاج</p>
+        </div>
+        <div *ngIf="pharmacies.length > 0" class="table-responsive">
+            <table class="table text-end   table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">عمليات</th>
+                        <th scope="col">المتبقي</th>
+                        <th scope="col">المنصرف</th>
+                        <th scope="col">الرصيد</th>
+                        <th scope="col">اسم الدواء</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of pharmacies; let i=index">
+                        <td><button (click)="delete(item.pharmacyId)" class="btn btn-outline-danger"><i
+                                    class="fa-solid fa-trash-can me-2"></i>مسح</button></td>
+                        <td>{{item.rest}}</td>
+                        <td>{{item.sold}}</td>
+                        <td>{{item.amount}}</td>
+                        <td>{{item.treatmentName}}</td>
+                        <th scope="row">{{1+i}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

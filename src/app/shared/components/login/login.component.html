@@ -1,0 +1,19 @@
+<div class="container-mine">
+    <div class="top"></div>
+    <div class="bottom"></div>
+    <div class="center">
+        <h3>الرجاء تسجيل الدخول</h3>
+        <div *ngIf="badCredential">
+            <p class="alert alert-danger">البريد الالكتروني و الرقم السري يوجد بهما خطأ</p>
+        </div>
+        <div *ngIf="error">
+            <p class="alert alert-danger">هناك خطأ في تسجيل الدخول </p>
+        </div>
+        <form [formGroup]="loginForm">
+            <input class="text-end" type="email" formControlName="email" required autofocus="true" placeholder="اسم المستخدم" />
+            <input class="text-end" type="password" formControlName="password" required placeholder="الرقم السري" />
+            <button type="submit" (click)="login(loginForm)" class="btn1">تسجيل الدخول</button>
+        </form>
+        <h2>&nbsp;</h2>
+    </div>
+</div>

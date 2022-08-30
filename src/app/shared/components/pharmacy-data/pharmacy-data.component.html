@@ -1,0 +1,47 @@
+<div id="pharmacy-patient-treatment" class=" table-responsive">
+    <table class="table text-end   table-hover">
+        <thead>
+            <tr>
+                <th scope="col">الفرق</th>
+                <th scope="col">اجمالي الشراء</th>
+                <th scope="col">اجمالي البيع</th>
+                <th scope="col">سعر البيع</th>
+                <th scope="col">سعر الشراء</th>
+                <th scope="col">الكميه</th>
+                <th scope="col">تعديل الكمية</th>
+                <th scope="col">اسم الدواء</th>
+                <th scope="col">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of treatments ;let i = index ">
+                <td>{{+((+order.totalSellPrice) - (+order.totalBuyPrice))}}</td>
+                <td>{{order.totalBuyPrice}}</td>
+                <td>{{order.totalSellPrice}}</td>
+                <td>{{order.sellPrice}}</td>
+                <td>{{order.buyPrice}}</td>
+                <td>{{order.amount}}</td>
+                <td><input type="number" class="form-control" (keyup)="setNewTreatment($event,order)"></td>
+                <td>{{order.treatmentName}}</td>
+                <th scope="row">{{1 + i}}</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td><input type="number" class="form-control" (keyup)="addMore($event)"></td>
+                <td><input type="text" class="form-control" placeholder="إكتب إسم العلاج" [ngbTypeahead]="search" [autofocus]="true" (keyup)="saveTreatment($event)" /></td>
+                <th scope="row">1</th>
+            </tr>
+
+        </tbody>
+    </table>
+    <p> الاجمالي {{totalPrice}}</p>
+    <div id="pharmacy-button" class="text-center mx-auto my-3" *ngIf="patientDate.patientId && orders.length > 0">
+        <button class="btn btn-outline-primary"><i class="fa-solid fa-briefcase-medical me-2"></i>صرف
+      العلاج</button>
+    </div>
+</div>

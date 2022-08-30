@@ -1,0 +1,84 @@
+<section style="margin-top: 60px">
+    <div class="text-center mb-3 pt-3">
+        <h3><i class="fa-solid fa-bed-pulse me-2"></i>المرضي</h3>
+    </div>
+    <div *ngIf="patients.length == 0" class="mx-auto text-center rounded py-3 w-25" style="border: 1px solid #999">
+        <h4>لا يوجد مرضي حاليا</h4>
+        <p class="muted pb-0 mb-0">الرجاء إضافة مرضي</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group text-end">
+                    <select class="form-select text-end" id="inputGroupSelectp" (change)="getPatientBySelected($event)">
+            <option selected disabled>...اختر</option>
+            <option *ngFor="let patient of patients" [value]="patient.patientName">
+              {{ patient.patientName }}
+            </option>
+          </select>
+                    <label class="input-group-text" for="inputGroupSelectp">عدد المرضي الحالي = {{ patients.length }}</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <input type="text" [ngbTypeahead]="search" [(ngModel)]="searchValue" (keyup.enter)="getPatient()" placeholder="إبحث بأسم المريض أو رقم القرار لإظهار البيانات" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
+                />
+            </div>
+            <div class="col-md-4">
+                <div class="date_search text-end">
+                    <input type="date" class="form-control text-end mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [formControl]="dateFrom" />
+                    <button (click)="getPatientsByDay()" class="btn btn-outline-primary">
+            <i class="fa-solid fa-calendar-days me-2"></i>بحث بالتاريخ
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="patients.length > 0" class="print-button mx-auto text-center">
+        <button (click)="exportexcel()" ngbTooltip="Excel تنزيل " class="btn btn-outline-success me-1">
+      <i class="fa-solid fa-file-excel me-2"></i>Excel تنزيل
+    </button>
+        <button (click)="deleteAll()" ngbTooltip="مسح الكل" class="btn btn-outline-danger ms-1">
+      <i class="fa-solid fa-trash me-2"></i>مسح الكل
+    </button>
+    </div>
+
+    <div *ngIf="patients.length > 0" class="table-responsive-xl mt-5 text-end">
+        <table class="table  table-hover" id="excel-table">
+            <thead>
+                <tr>
+                    <th scope="col ">العمليات</th>
+                    <th scope="col ">نوع الحالة</th>
+                    <th scope="col ">التشخيص</th>
+                    <th scope="col ">مبلغ القرار</th>
+                    <th scope="col " style="width: fit-content">مدة القرار</th>
+                    <th scope="col ">العيادة</th>
+                    <th scope="col ">رقم القرار</th>
+                    <th scope="col ">كود المرض</th>
+                    <th scope=" col ">اسم المريض</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let patientData of patients">
+                    <td>
+                        <button (click)="delete(patientData.patientId)" ngbTooltip="مسح" class="btn btn-outline-danger">
+              <i class="fa-solid fa-trash-can me-2"></i>مسح
+            </button>
+                        <button (click)="showBankStatement(patientData.decisionNumber,patientData.patientName)" ngbTooltip="كشف حساب" class="btn btn-outline-success ms-1">
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>عرض كشف الحساب
+            </button>
+                    </td>
+                    <td>{{ patientData.statusType }}</td>
+                    <td>{{ patientData.diagnosis }}</td>
+                    <td>{{ patientData.decisionAmount }}</td>
+                    <td>{{ patientData.decisionDuration }}</td>
+                    <td>{{ patientData.clinicName }}</td>
+                    <td>{{ patientData.decisionNumber }}</td>
+                    <td>{{ patientData.diseaseCode }}</td>
+                    <td>{{ patientData.patientName }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

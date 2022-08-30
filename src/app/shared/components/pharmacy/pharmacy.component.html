@@ -1,0 +1,380 @@
+<section style="margin-top: 60px">
+    <div id="pharmacy-title" class="text-center mb-1 pt-3">
+        <h3><i class="fa-solid fa-mortar-pestle me-2"></i>الصيدلية</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group text-end">
+                    <select class="form-select text-end" id="inputGroupSelectp" (change)="getPatientBySelected($event)">
+            <option selected disabled>...اختر</option>
+            <option
+              *ngFor="let patient of patients"
+              [value]="patient.patientName"
+            >
+              {{ patient.patientName }}
+            </option>
+          </select>
+                    <label class="input-group-text" for="inputGroupSelectp">عدد المرضي الحالي = {{ patients.length }}</label
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <input
+          type="text"
+          [(ngModel)]="searchValue"
+          [ngbTypeahead]="searchPatient"
+          (keyup.enter)="getPatient()"
+          placeholder="إبحث بأسم المريض أو رقم القرار لإظهار البيانات"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+      </div>
+      <div class="col-md-4">
+        <div class="date-search text-end">
+          <input
+            type="date"
+            class="form-control text-end mb-1"
+            aria-label="Sizing example input"
+            aria-describedby="inputGroup-sizing-default"
+            [(ngModel)]="dateFrom"
+          />
+          <button (click)="getPatientsByDay()" class="btn btn-outline-primary">
+            <i class="fa-solid fa-calendar-days me-2"></i>بحث بالتاريخ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="treatments.length > 0" class="row-parent">
+    <div class="col-child mt-1">
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="text"
+          [value]="patientDate.statusType"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >الحالة</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <textarea
+          disabled
+          class="form-control"
+          id="exampleFormControlTextarea1"
+          [value]="patientDate.diagnosis"
+          rows="3"
+        ></textarea>
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >التشخيص</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <!-- <ul class="form-control">
+                    <li *ngFor="let item of months">{{item.monthNumber}}</li>
+                </ul> -->
+        <select class="form-select text-end" multiple id="inputGroupSelectp">
+          <option
+            *ngFor="let item of months"
+            disabled
+            [value]="item.monthNumber"
+          >
+            {{ item.monthNumber }}
+          </option>
+        </select>
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >شهور الصرف</span
+        >
+      </div>
+    </div>
+    <div class="col-child mt-1">
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="text"
+          [value]="patientDate.createdDate | date: 'short'"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >تاريخ التسجيل</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="text"
+          [value]="patientDate.clinicName"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >عيادة</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="number"
+          [value]="patientDate.decisionNumber"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >رقم القرار</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <span class="input-group-text">يوم</span>
+        <input
+          disabled
+          type="number"
+          [value]="patientDate.decisionDuration"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >مدة القرار</span
+        >
+      </div>
+    </div>
+
+    <div class="col-child mt-1">
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="number"
+          [value]="patientDate.patientamount"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >رقم التسجيل</span
+        >
+      </div>
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="text"
+          [value]="patientDate.patientName"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >اسم المريض</span
+        >
+      </div>
+
+      <div class="input-group mb-1">
+        <input
+          disabled
+          type="number"
+          [value]="patientDate.totalAmountNow"
+          class="form-control text-end"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        />
+        <span class="input-group-text" id="inputGroup-sizing-default"
+          >المبلغ المستحق</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="treatments.length > 0" class="copyPaste text-end">
+    <button class="btn btn-outline-primary" (click)="copyOrders()">
+      <i class="fa-solid fa-copy me-2"></i>نسخ العلاج
+    </button>
+    <button
+      class="btn btn-outline-success"
+      *ngIf="copyOrdersData.length > 0"
+      (click)="pasteOrders()"
+    >
+      <i class="fa-solid fa-paste me-2"></i>لصق العلاج
+    </button>
+  </div>
+
+  <div *ngIf="treatments.length > 0">
+    <div class="table-responsive-sm">
+      <table class="table table-hover text-end mx-auto">
+        <thead>
+          <tr>
+            <th scope="col">م</th>
+            <th scope="col">اسم الدواء</th>
+            <th scope="col">الكميه</th>
+            <th scope="col">سعر البيع</th>
+            <th scope="col">سعر الشراء</th>
+            <th scope="col">اجمالي البيع</th>
+            <th scope="col">اجمالي الشراء</th>
+            <th scope="col">عمليات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let productBill of productsBill; let i = index">
+            <td class="text-center" scope="col">{{ i + 1 }}</td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                placeholder="إسم الدواء"
+                [(ngModel)]="productBill.treatmentName"
+                type="text"
+                name="{{ productBill.treatmentName }}"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                placeholder="الكمية"
+                (keyup.enter)="
+                  updateValueOld(productBill);
+                  updateAllValues();
+                  checkTreatmentAmount(productBill.amount) ;
+                  addRow()
+                "
+                [(ngModel)]="productBill.amount"
+                type="text"
+                name="{{ productBill.amount }}"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                placeholder="سعر البيع"
+                [(ngModel)]="productBill.sellPrice"
+                type="number"
+                name="{{ productBill.sellPrice }}"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                placeholder="سعر الشراء"
+                [(ngModel)]="productBill.buyPrice"
+                type="number"
+                name="{{ productBill.buyPrice }}"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                placeholder="إجمالي سعر البيع"
+                [(ngModel)]="productBill.totalSellPrice"
+                type="number"
+                name="{{ productBill.totalSellPrice }}"
+              />
+            </td>
+            <td (mousemove)="getTotalSellPrice(); updateValueOld(productBill)">
+              <input
+                class="table-cell text-end form-control"
+                placeholder="إجمالي سعر الشراء"
+                [(ngModel)]="productBill.totalBuyPrice"
+                type="number"
+                name="{{ productBill.totalBuyPrice }}"
+              />
+            </td>
+            <td>
+              <button
+                class="btn btn-outline-danger"
+                type="button"
+                (click)="deleteRow(i)"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center mx-auto">...</td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                type="text"
+                [ngbTypeahead]="search"
+                (keyup)="getNewTreatment($event)"
+                [(ngModel)]="newProductsBill.treatmentName"
+                name="treatmentName"
+              />
+            </td>
+            <td (mousemove)="getTotalSellPrice()">
+              <input
+                class="table-cell text-end form-control"
+                (keyup.enter)="
+                  updateValue();
+                  updateAllValues();
+                  checkTreatmentAmount(newProductsBill.amount) ;
+                  addRow()
+                "
+                type="number"
+                [(ngModel)]="newProductsBill.amount"
+                name="amount"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                type="number"
+                [(ngModel)]="newProductsBill.sellPrice"
+                name="sellPrice"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                type="number"
+                [(ngModel)]="newProductsBill.buyPrice"
+                name="buyPrice"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                type="number"
+                [(ngModel)]="newProductsBill.totalSellPrice"
+                name="totalSellPrice"
+              />
+            </td>
+            <td>
+              <input
+                class="table-cell text-end form-control"
+                type="number"
+                [(ngModel)]="newProductsBill.totalBuyPrice"
+                name="totalBuyPrice"
+              />
+            </td>
+            <td>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                (click)="addRow()"
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="totalPrice text-end me-2">
+        <h4>الاجمالي = {{ totalOrderPrice }}</h4>
+      </div>
+      <div class="text-center mx-auto" (mousemove)="getTotalSellPrice()">
+        <button
+          class="btn btn-outline-primary"
+          (click)="addBill(); getTotalSellPrice()"
+        >
+          <i class="fa-solid fa-file-invoice me-2"></i>صرف
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

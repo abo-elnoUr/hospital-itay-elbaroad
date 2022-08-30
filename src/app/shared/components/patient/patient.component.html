@@ -1,0 +1,588 @@
+<section style="margin-top: 60px">
+    <div class="text-center mb-1 pt-3">
+        <h3><i class="fa-solid fa-hospital-user me-2"></i>تسجيل المرضي</h3>
+    </div>
+    <!-- (keyup)="getPatientsByDate($event)" -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-end">
+                <div class="input-group text-end">
+                    <select class="form-select text-end" id="inputGroupSelectp" (change)="getPatientBySelected($event)">
+            <option selected disabled>...اختر</option>
+            <option *ngFor="let patient of patients" [value]="patient.patientName">
+              {{ patient.patientName }}
+            </option>
+          </select>
+                    <label class="input-group-text" for="inputGroupSelectp">عدد المرضي الحالي = {{ patients.length }}</label>
+                </div>
+                <button (click)="findAllPatient()" class="btn btn-outline-primary mt-1">
+          <i class="fa-solid fa-folder-tree me-2"></i>عرض كل المرضي الموجودين للبحث
+        </button>
+            </div>
+            <div class="col-md-4 text-end">
+                <input type="text" [ngbTypeahead]="search" [(ngModel)]="searchValue" (keyup.enter)="getPatient()" placeholder="إبحث بأسم المريض أو رقم القرار لإظهار البيانات" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
+                />
+                <button (click)="removeAllFields()" class="btn btn-outline-primary mt-1">
+          <i class="fa-solid fa-folder-plus me-2"></i>تسجيل مريض جديد
+        </button>
+            </div>
+            <div class="col-md-4 mb-1">
+                <div class="date_search text-end">
+                    <input type="date" class="form-control text-end mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [(ngModel)]="dateFrom" />
+                    <button (click)="getPatientsByDay()" class="btn btn-outline-primary">
+            <i class="fa-solid fa-calendar-days me-2"></i>بحث بالتاريخ
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لو المريض اول مرة يتسجل -->
+
+    <div class="divider-parent"><span class="divider my-3"></span></div>
+    <div class="container-fluid" *ngIf="!patientData.patientId">
+        <form [formGroup]="dataForm">
+            <div class="row mx-auto">
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="patientName" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">اسم المريض</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="nationalId" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الرقم القومي</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" (keyup)="getDiseaseByCode($event)" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الكود</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionNumber" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">رقم القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="clinicName" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">عيادة</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <select class="form-select text-end" id="inputGroupSelect01" formControlName="statusType">
+              <option selected value="انسولين">انسولين</option>
+              <option value="كلوي">كلوي</option>
+              <option value="امراض عامة">امراض عامة</option>
+              <option value="اريثروبوتين">اريثروبوتين</option>
+            </select>
+                        <label class="input-group-text" for="inputGroupSelect01">نوع الحالة</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-auto">
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionAmount" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">مبلغ القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">يوم</span>
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionDuration" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">مدة القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="totalAmountBefor" [value]="totalAmountBefor" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">المصروف سابقا</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="totalAmountNow" [value]="totalAmountNow" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">المبلغ المستحق</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="billDateBefor" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">تاريخ الصرف السابق</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="billDateArter" (click)="getTotalAmount()" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">تاريخ الصرف الحالي</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-auto">
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" formControlName="diagnosis"></textarea>
+                        <span class="input-group-text" id="inputGroup-sizing-default">التشخيص</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="totalAmountRest" [value]="totalAmountRest" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الباقي</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <select class="form-select text-end" id="inputGroupSelect01" [formControl]="monthsBefor" multiple>
+              <option selected disabled>...اختر</option>
+              <option value="1">يناير</option>
+              <option value="2">فبراير</option>
+              <option value="3">مارس</option>
+              <option value="4">أريل</option>
+              <option value="5">مايو</option>
+              <option value="6">يونيو</option>
+              <option value="7">يوليو</option>
+              <option value="8">أغسطس</option>
+              <option value="9">سبتمبر</option>
+              <option value="10">أكتوبر</option>
+              <option value="11">نوفمبر</option>
+              <option value="12">ديسمر</option>
+            </select>
+                        <label class="input-group-text" for="inputGroupSelect01">شهور الصرف السابقة</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1" (mouseleave)="getTotalAmount()">
+                        <select class="form-select text-end" id="inputGroupSelect01" [formControl]="monthsAfter" multiple (mouseenter)="getMonthes()">
+              <option selected disabled>...اختر</option>
+              <option *ngFor="let item of allMonthsAfter" [value]="item">
+                {{ item }}
+              </option>
+            </select>
+                        <label class="input-group-text" for="inputGroupSelect01">شهور الصرف الحالية</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="text-center add_button my-5">
+                        <button class="btn btn-outline-primary" (click)="save(dataForm)">
+              <i class="fa-solid fa-hospital-user me-2"></i>اضافة مريض جديد
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- الكارنية سجل المريض الاول -->
+                    <div id="print_card">
+                        <div class="container print-card">
+                            <div class="row text-end">
+                                <div class="col-12">
+                                    <span class="lead text-end">
+                    اسم المريض : {{ patientDataPrint.patientName }}</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-12">
+                                    <span class="lead text-end">
+                    الرقم القومي : {{ patientDataPrint.nationalId }}</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.diseaseCode }} : كود المرض</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.decisionNumber }} : رقم القرار</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.decisionAmount }} : مبلغ القرار</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    نوع الحالة : {{ patientDataPrint.statusType }}</span>
+                                </div>
+                                <div class="row text-end">
+                                    <div class="col-12">
+                                        <img class="img-fluid" width="300px" height="120px" [src]="
+                      'data:Image/jpg;base64,' + patientDataPrint.parcodePhoto
+                    " alt="{{ 'QR Code' }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-1">
+                        <button printSectionId="print_card" [useExistingCss]="true" ngxPrint class="btn btn-outline-success mb-3">
+              <i class="fa-solid fa-print me-2"></i>طباعة كارنية
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="divider-parent"><span class="divider my-3"></span></div>
+    <!-- لو المريض خلص القرار بتاعة و جاي يجدد قرار جديد    -->
+    <form [formGroup]="dataForm" *ngIf="patientData.patientId && patientData.oldDecisionDuration == 0">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="patientName" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">اسم المريض</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="nationalId" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الرقم القومي</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" (keyup)="getDiseaseByCode($event)" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الكود</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionNumber" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">رقم القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="clinicName" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">عيادة</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <select class="form-select text-end" id="inputGroupSelect01" formControlName="statusType">
+              <option selected disabled>...اختر</option>
+              <option value="انسولين">انسولين</option>
+              <option value="كلوي">كلوي</option>
+              <option value="امراض عامة">امراض عامة</option>
+              <option value="اريثروبوتين">اريثروبوتين</option>
+            </select>
+                        <label class="input-group-text" for="inputGroupSelect01">نوع الحالة</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionAmount" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">مبلغ القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <span class="input-group-text">يوم</span>
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionDuration" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">مدة القرار</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="totalAmountNow" [value]="totalAmountNow" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">المبلغ المستحق</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="totalAmountRest" [value]="totalAmountRest" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">الباقي</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="billDateArter" (click)="getTotalAmount()" />
+                        <span class="input-group-text" id="inputGroup-sizing-default">تاريخ الصرف الحالي</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                    <div class="input-group mb-1">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="diagnosis"></textarea>
+                        <span class="input-group-text" id="inputGroup-sizing-default">التشخيص</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="input-group mb-1" (mouseleave)="getTotalAmount()">
+                        <select class="form-select text-end" id="inputGroupSelect01" [formControl]="monthsAfter" multiple (mouseenter)="getMonthes()">
+              <option selected disabled>...اختر</option>
+              <option *ngFor="let item of allMonthsAfter" [value]="item">
+                {{ item }}
+              </option>
+            </select>
+                        <label class="input-group-text" for="inputGroupSelect01">شهور الصرف الحالية</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="text-center add_button my-5">
+                        <button class="btn btn-outline-primary" (click)="reSave(dataForm)">
+              <i class="fa-solid fa-hospital-user me-2"></i>اضافة قرار جديد لهذا
+              المريض
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- الكارنية سجل المريض الاول -->
+                    <div id="print_card">
+                        <div class="container print-card">
+                            <div class="row text-end">
+                                <div class="col-12">
+                                    <span class="lead text-end">
+                    اسم المريض : {{ patientDataPrint.patientName }}</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-12">
+                                    <span class="lead text-end">
+                    الرقم القومي : {{ patientDataPrint.nationalId }}</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.diseaseCode }} : كود المرض</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.decisionNumber }} : رقم القرار</span>
+                                </div>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    {{ patientDataPrint.decisionAmount }} : مبلغ القرار</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="lead text-end">
+                    نوع الحالة : {{ patientDataPrint.statusType }}</span>
+                                </div>
+                                <div class="row text-end">
+                                    <div class="col-12">
+                                        <img class="img-fluid" width="300px" height="120px" [src]="
+                        'data:Image/jpg;base64,' + patientDataPrint.parcodePhoto
+                      " alt="{{ 'QR Code' }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-1">
+                        <button printSectionId="print_card" [useExistingCss]="true" ngxPrint class="btn btn-outline-success mb-3">
+              <i class="fa-solid fa-print me-2"></i>طباعة كارنية
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- لو المريض جاي يصرف لتاني مرة -->
+    <div class="divider-parent"><span class="divider my-3"></span></div>
+
+    <div *ngIf="patientData.patientId && patientData.oldDecisionDuration > 0" class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="text-center add_button">
+                    <button class="btn btn-outline-primary" (click)="update()">
+            <i class="fa-solid fa-hospital-user me-2"></i>اضافة عملية صرف جديده
+          </button>
+                    <button class="btn btn-outline-primary" (click)="delete(patientObj.patientId)">
+            <i class="fa-solid fa-hospital-user me-2"></i>حذف المريض
+          </button>
+                    <button class="btn btn-outline-primary" (click)="getLastPatient()">
+            <i class="fa-solid fa-hospital-user me-2"></i>السابق
+          </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="text" [value]="patientData.patientName" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">اسم المريض</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [value]="patientData.nationalId" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">الرقم القومي</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="number" [value]="patientData.decisionNumber" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">رقم القرار</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="text" [value]="patientData.clinicName" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">عيادة</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <span class="input-group-text">يوم</span>
+                    <input disabled type="number" [value]="patientData.decisionDuration" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">مدة القرار</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="text" [value]="patientData.createdDate | date: 'short'" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">تاريخ التسجيل</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="number" [value]="patientData.decisionAmount" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">مبلغ القرار</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" (click)="getTotalAmountNow()" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">تاريخ الصرف الحالي</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input disabled type="text" [value]="patientData.statusType" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">الحالة</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <textarea disabled class="form-control" id="exampleFormControlTextarea1" [value]="patientData.diagnosis" rows="1"></textarea>
+                    <span class="input-group-text" id="inputGroup-sizing-default">التشخيص</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input type="number" class="form-control text-end" disabled aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" [value]="patientData.totalAmountBefor" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">المصروف سابقا</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" disabled [value]="totalAmountNowt" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">المبلغ المستحق</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" disabled [value]="totalAmountRestt" />
+                    <span class="input-group-text" id="inputGroup-sizing-default">الباقي</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 text-center"></div>
+            <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1">
+                    <!-- <ul class="form-control">
+                    <li *ngFor="let item of previousMonthsData">{{item}}</li>
+                </ul> -->
+                    <select class="form-select text-end" id="inputGroupSelect01" [formControl]="monthsAfter" multiple (mouseenter)="getMonthes()">
+            <!-- <option selected disabled>...اختر</option> -->
+            <option *ngFor="let item of previousMonthsData" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+                    <span class="input-group-text" id="inputGroup-sizing-default">الشهور المصروفة</span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-3 col-sm-6 text-center">
+                <div class="input-group mb-1" (mouseleave)="getTotalAmountNow()">
+                    <select class="form-select text-end" id="inputGroupSelect01" [formControl]="monthsAfterNow" multiple (mouseenter)="PreviousMonthes()">
+            <option selected disabled>...اختر</option>
+            <option *ngFor="let item of allMonthsAfter" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+                    <label class="input-group-text" for="inputGroupSelect01">شهور الصرف الحالية</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- الكارنية سجل المريض الاول -->
+                <div id="print_card">
+                    <div class="container print-card">
+                        <div class="row text-end">
+                            <div class="col-12">
+                                <span class="lead text-end">
+                  اسم المريض : {{ patientObj.patientName }}</span>
+                            </div>
+                            <div class="row text-end">
+                                <div class="col-12">
+                                    <span class="lead text-end">
+                    الرقم القومي : {{ patientDataPrint.nationalId }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-end">
+                            <div class="col-6">
+                                <span class="lead text-end">
+                  {{ patientObj.diseaseCode }} : كود المرض</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="lead text-end">
+                  {{ patientObj.decisionNumber }} : رقم القرار</span>
+                            </div>
+                        </div>
+                        <div class="row text-end">
+                            <div class="col-6">
+                                <span class="lead text-end">
+                  {{ patientObj.decisionAmount }} : مبلغ القرار</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="lead text-end">
+                  نوع الحالة : {{ patientObj.statusType }}</span>
+                            </div>
+                        </div>
+                        <div class="row text-end">
+                            <div class="col-12">
+                                <img class="img-fluid" width="200px" height="50px" [src]="'data:Image/jpg;base64,' + patientObj.parcodePhoto" alt="{{ 'QR Code' }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-1">
+                    <button printSectionId="print_card" [useExistingCss]="true" ngxPrint class="btn btn-outline-success mb-3">
+            <i class="fa-solid fa-print me-2"></i>طباعة كارنية
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

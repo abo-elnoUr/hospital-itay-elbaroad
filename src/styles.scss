@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+/* Google Fonts Import Link */
+
+@import url("https://fonts.googleapis.com/css2?family=Lalezar&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rakkas&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rakkas&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Harmattan:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rakkas&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@500&display=swap");
+
+/* Importing Bootstrap SCSS file. */
+
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/dist/css/bootstrap.css";
+
+/* Scrollbar Styling */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: #6d6d6d;
+}
+
+// background color of app
+* {
+    // background-color: #89cff0;
+}
+
+input,
+select,
+span,
+label,
+textarea,
+table {
+    background-color: transparent !important;
+    border-color: #999 !important;
+}

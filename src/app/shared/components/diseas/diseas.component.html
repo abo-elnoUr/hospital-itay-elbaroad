@@ -1,0 +1,83 @@
+<section style="margin-top: 60px">
+    <div class="text-center mb-1 pt-3">
+        <h3><i class="fa-solid fa-barcode me-2"></i>إضافة مرض</h3>
+        <div class="col-md-4 mx-auto">
+            <input type="text" [(ngModel)]="searchValue" [ngbTypeahead]="search" (keyup.enter)="getDiseasByCode()" placeholder="إبحث لإظهار البيانات" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+        </div>
+    </div>
+    <form [formGroup]="dataForm" class="row-parent">
+        <div class="col-child mt-1">
+            <div class="input-group mb-1">
+                <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="clinicName" />
+                <span class="input-group-text" id="inputGroup-sizing-default">إسم العيادة</span>
+            </div>
+        </div>
+        <div class="col-child mt-1">
+            <div class="input-group mb-1">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionAmount" />
+                <span class="input-group-text" id="inputGroup-sizing-default">مبلغ القرار</span>
+            </div>
+            <div class="input-group mb-1">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="decisionDuration" />
+                <span class="input-group-text" id="inputGroup-sizing-default">مدة القرار</span>
+            </div>
+        </div>
+        <div class="col-child mt-1">
+            <div class="input-group mb-1">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="diseaseCode" />
+                <span class="input-group-text" id="inputGroup-sizing-default">كود المرض</span>
+            </div>
+            <div class="input-group mb-1">
+                <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="diagnosis" />
+                <span class="input-group-text" id="inputGroup-sizing-default">التشخيص</span>
+            </div>
+        </div>
+        <div></div>
+        <div>
+            <button *ngIf="diseaseDate.diseaseId" style="width: 100%" class="btn btn-outline-primary" [disabled]="dataForm.invalid" (click)="update(dataForm)">
+                تعديل المرض
+            </button>
+            <button *ngIf="!diseaseDate.diseaseId" style="width: 100%" class="btn btn-outline-primary" [disabled]="dataForm.invalid" (click)="save(dataForm)">
+                اضافة المرض
+            </button>
+        </div>
+        <div></div>
+    </form>
+    <!-- <div class="divider-parent"> <span class="divider my-3"></span> </div> -->
+
+    <div class="table-responsive-xl mt-1">
+        <table class="table   text-end" id="excel-table">
+            <thead>
+                <tr>
+                    <th scope="col">العمليات</th>
+                    <th scope="col">العيادة</th>
+                    <th scope="col" style="width: fit-content">مدة القرار</th>
+                    <th scope="col">التشخيص</th>
+                    <th scope="col">مبلغ القرار</th>
+                    <th scope="col">كود المرض</th>
+                    <th scope="col">م</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let disease of diseases; let i = index">
+                    <td>
+                        <button class="btn btn-info" (click)="getDisease(disease)" class="btn btn-info">
+                            تعديل
+                        </button>
+                        <button class="btn btn-dangar" (click)="deleteDisease(disease.diseaseId)" class="btn btn-info">
+                            حذف
+                        </button>
+                    </td>
+                    <td>{{ disease.clinicName }}</td>
+                    <td>{{ disease.decisionDuration }}</td>
+                    <td>{{ disease.diagnosis }}</td>
+                    <td>{{ disease.decisionAmount }}</td>
+                    <td>{{ disease.diseaseCode }}</td>
+                    <th scope="row">
+                        {{ i + 1 }}
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

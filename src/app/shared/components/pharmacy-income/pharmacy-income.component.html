@@ -1,0 +1,115 @@
+<section style="margin-top: 60px">
+    <div class="text-center mb-3 pt-3">
+        <h3><i class="fa-solid fa-truck-medical me-2"></i>وارد الصيدلية</h3>
+        <div class="col-md-4 mx-auto">
+            <input type="text" [(ngModel)]="searchValue" [ngbTypeahead]="searchTreatments" (keyup.enter)="getSearchedTreatmentByName()" placeholder="إبحث لإظهار البيانات" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"
+            />
+        </div>
+    </div>
+    <form [formGroup]="dataForm">
+        <div class="row-parent-2 mx-3 py-3">
+            <!-- **** -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="treatmentName" [ngbTypeahead]="search" (selectItem)="getTreatmentByName($event)" />
+                <span class="input-group-text" id="inputGroup-sizing-default">اسم الدواء</span>
+            </div>
+            <div class="input-group mb-3">
+                <select class="form-select text-end" (change)="getPercentage($event)" formControlName="percentage">
+                    <option value="12">12 %</option>
+                    <option  value="14">14 %</option>
+                </select>
+                <span class="input-group-text" id="inputGroup-sizing-default">النسبة</span>
+            </div>
+            <div class="input-group mb-3" *ngIf="!treatmentData.treatmentId">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="treatmentAmount" />
+                <span class="input-group-text" id="inputGroup-sizing-default">الكمية</span>
+            </div>
+            <div class="input-group mb-3">
+                <input type="number" hidden class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="sellPrice" />
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="buyPrice" [(ngModel)]="buyPrice" (keyup)="getSellPrice()" />
+                <span class="input-group-text" id="inputGroup-sizing-default">سعر الشراء</span>
+            </div>
+            <div class="input-group mb-3" *ngIf="treatmentData.treatmentId">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="updateMaxValue" />
+                <span class="input-group-text" id="inputGroup-sizing-default">زيادة علي الكمية</span>
+            </div>
+            <div class="input-group mb-3" *ngIf="treatmentData.treatmentId">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="updateMinValue" />
+                <span class="input-group-text" id="inputGroup-sizing-default">نقص من الكمية</span>
+            </div>
+
+            <div class="input-group mb-3" *ngIf="treatmentData.treatmentId">
+                <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" fformControlName="updatedDate" />
+                <span class="input-group-text" id="inputGroup-sizing-default">تاريخ التعديل</span>
+            </div>
+            <div class="input-group mb-3" *ngIf="!treatmentData.treatmentId">
+                <input type="date" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="createdDate" />
+                <span class="input-group-text" id="inputGroup-sizing-default">تاريخ الاضافة</span>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="notes" />
+                <span class="input-group-text" id="inputGroup-sizing-default">الملاحظات</span>
+            </div>
+
+
+            <div class="input-group mb-3" *ngIf="treatmentData.treatmentId">
+                <input type="number" class="form-control text-end" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" formControlName="treatmentAmount" />
+                <span class="input-group-text" id="inputGroup-sizing-default">الكمية</span>
+            </div>
+
+
+
+
+
+
+            <!-- **** -->
+        </div>
+        <div class="button-income mx-3">
+            <button class="btn btn-outline-primary" [disabled]="!dataForm.valid" *ngIf="!treatmentData.treatmentId" (click)="save(dataForm)">
+                <i class="fa-solid fa-spell-check me-2"></i>اضافة فاتورة
+            </button>
+            <button class="btn btn-outline-success" [disabled]="!dataForm.valid" *ngIf="treatmentData.treatmentId" (click)="edit(dataForm)">
+                <i class="fa-solid fa-pen-to-square me-2"></i>تعديل فاتورة
+            </button>
+        </div>
+    </form>
+
+    <div *ngIf="treatments.length > 0" class="divider-parent">
+        <span class="divider my-3"></span>
+    </div>
+
+    <div *ngIf="treatments.length > 0" class="table-responsive-xl mt-5">
+        <table class="table  table-hover text-end w-50 mx-auto">
+            <thead>
+                <tr>
+                    <th scope="col">عمليات</th>
+                    <th scope="col">التاريخ</th>
+                    <th scope="col">الملاحظات</th>
+                    <th scope="col">سعر البيع</th>
+                    <th scope="col">سعر الشراء</th>
+                    <th scope="col">الكميه</th>
+                    <th scope="col">اسم الدواء</th>
+                    <th scope="col">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let treatment of treatments; let i = index">
+                    <td>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-outline-success" (click)="update(treatment)">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>{{ treatment.createdDate | date: "yyyy-MM-dd" }}</td>
+                    <td>{{ treatment.notes }}</td>
+                    <td>{{ treatment.sellPrice }}</td>
+                    <td>{{ treatment.buyPrice }}</td>
+                    <td>{{ treatment.treatmentAmount }}</td>
+                    <td>{{ treatment.treatmentName }}</td>
+                    <th scope="row">{{ 1 + i }}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

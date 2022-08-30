@@ -1,0 +1,30 @@
+<section style="margin-top: 60px">
+    <div class="container">
+        <h3 class="my-3 py-5" style="text-align: center;">add new User</h3>
+        <form [formGroup]="signupForm">
+            <div class="form-floating mb-3">
+                <input id="first" type="text" class="form-control text-end" placeholder="الاسم الاول" formControlName="firstName">
+                <label class="text-end" for="first">First Name</label>
+            </div>
+            <div class="form-floating text-end mb-3">
+                <input id="last" type="text" class="form-control text-end" placeholder="الاسم الاخير" formControlName="lastName">
+                <label class="text-end" for="last">Last Name</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input id="email" type="email" class="form-control text-end" placeholder="البريد الالكتروني" formControlName="email">
+                <label class="text-end" for="email">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="pass" type="password" class="form-control text-end" placeholder="الرقم السري" formControlName="password">
+                <label class="text-end" for="pass">Password</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="phone" type="text" class="form-control text-end" placeholder="رقم التلفون" formControlName="phoneNumber">
+                <label class="text-end" for="phone">Phone</label>
+            </div>
+            <button class="btn btn-outline-primary" (click)="signup(signupForm)">Sign
+        UP</button>
+        </form>
+    </div>
+</section>
